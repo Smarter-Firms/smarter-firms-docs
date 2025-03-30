@@ -1,0 +1,558 @@
+openapi: 3.1.0
+info:
+  title: Smarter Firms Authentication API
+  version: 1.0.0
+  description: Authentication API for the Smarter Firms platform
+  contact:
+    name: Smarter Firms Development Team
+    email: dev@smarterfirms.com
+
+servers:
+  - url: https://api.smarterfirms.com/auth
+    description: Production server
+  - url: https://staging-api.smarterfirms.com/auth
+    description: Staging server
+  - url: http://localhost:3000/auth
+    description: Local development
+
+tags:
+  - name: authentication
+    description: Authentication operations
+  - name: account
+    description: Account management operations
+  - name: tokens
+    description: Token operations
+  - name: clio
+    description: Clio SSO operations
+  - name: security
+    description: Security-related operations
+
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: JWT token issued by the Auth Service
+    RefreshToken:
+      type: apiKey
+      in: cookie
+      name: refresh_token
+      description: HTTP-only cookie containing the refresh token
+
+  schemas:
+    Error:
+      type: object
+      required:
+        - code
+        - message
+      properties:
+        code:
+          type: string
+          description: Error code
+        message:
+          type: string
+          description: Human-readable error message
+        details:
+          type: object
+          description: Additional error details
+
+    LoginRequest:
+      type: object
+      required:
+        - email
+        - password
+      properties:
+        email:
+          type: string
+          format: email
+        password:
+          type: string
+          format: password
+        fingerprint:
+          type: string
+          description: Browser/device fingerprint for enhanced security
+
+    RegisterRequest:
+      type: object
+      required:
+        - email
+        - password
+        - firstName
+        - lastName
+      properties:
+        email:
+          type: string
+          format: email
+        password:
+          type: string
+          format: password
+          minLength: 12
+        firstName:
+          type: string
+        lastName:
+          type: string
+        firm:
+          type: string
+        position:
+          type: string
+        fingerprint:
+          type: string
+          description: Browser/device fingerprint for enhanced security
+
+    TokenResponse:
+      type: object
+      required:
+        - accessToken
+        - tokenType
+        - expiresIn
+      properties:
+        accessToken:
+          type: string
+          description: JWT access token
+        tokenType:
+          type: string
+          enum: [bearer]
+        expiresIn:
+          type: integer
+          description: Token expiration in seconds
+        user:
+          $ref: '#/components/schemas/UserProfile'
+
+    UserProfile:
+      type: object
+      required:
+        - id
+        - email
+        - firstName
+        - lastName
+        - type
+      properties:
+        id:
+          type: string
+          format: uuid
+        email:
+          type: string
+          format: email
+        firstName:
+          type: string
+        lastName:
+          type: string
+        type:
+          type: string
+          enum: [LAW_FIRM_USER, CONSULTANT]
+        organization:
+          type: string
+        hasClioConnection:
+          type: boolean
+        emailVerified:
+          type: boolean
+
+    TokenRequest:
+      type: object
+      required:
+        - grantType
+      properties:
+        grantType:
+          type: string
+          enum: [refresh_token, password]
+        refreshToken:
+          type: string
+        fingerprint:
+          type: string
+          description: Browser/device fingerprint
+
+    ClioAuthRequest:
+      type: object
+      required:
+        - codeVerifier
+        - redirectUri
+      properties:
+        codeVerifier:
+          type: string
+          description: PKCE code verifier
+          minLength: 43
+          maxLength: 128
+        redirectUri:
+          type: string
+          format: uri
+
+    ClioCallbackRequest:
+      type: object
+      required:
+        - code
+        - state
+        - codeVerifier
+      properties:
+        code:
+          type: string
+        state:
+          type: string
+        codeVerifier:
+          type: string
+          minLength: 43
+          maxLength: 128
+
+    TOTPSetupResponse:
+      type: object
+      required:
+        - secret
+        - qrCode
+        - backupCodes
+      properties:
+        secret:
+          type: string
+        qrCode:
+          type: string
+          format: uri
+        backupCodes:
+          type: array
+          items:
+            type: string
+
+    TOTPVerifyRequest:
+      type: object
+      required:
+        - code
+      properties:
+        code:
+          type: string
+          pattern: '^[0-9]{6}$'
+
+paths:
+  /login:
+    post:
+      tags: [authentication]
+      summary: Login with email and password
+      operationId: login
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
+      responses:
+        '200':
+          description: Successful login
+          headers:
+            Set-Cookie:
+              schema:
+                type: string
+                example: refresh_token=xxx; HttpOnly; Secure; SameSite=Strict; Path=/; Max-Age=2592000
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TokenResponse'
+        '400':
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Invalid credentials
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '429':
+          description: Too many requests
+          headers:
+            Retry-After:
+              schema:
+                type: integer
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /register:
+    post:
+      tags: [authentication]
+      summary: Register a new user
+      operationId: register
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RegisterRequest'
+      responses:
+        '201':
+          description: User successfully created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserProfile'
+        '400':
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '409':
+          description: Email already exists
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '429':
+          description: Too many requests
+          headers:
+            Retry-After:
+              schema:
+                type: integer
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /token:
+    post:
+      tags: [tokens]
+      summary: Issue new access token using refresh token
+      operationId: refreshToken
+      security:
+        - RefreshToken: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TokenRequest'
+      responses:
+        '200':
+          description: New access token issued
+          headers:
+            Set-Cookie:
+              schema:
+                type: string
+                example: refresh_token=xxx; HttpOnly; Secure; SameSite=Strict; Path=/; Max-Age=2592000
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TokenResponse'
+        '400':
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Invalid refresh token
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Token reuse detected
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /clio/authorize:
+    post:
+      tags: [clio, authentication]
+      summary: Generate authorization URL for Clio SSO with PKCE
+      operationId: authorizeWithClio
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ClioAuthRequest'
+      responses:
+        '200':
+          description: Authorization URL and state generated
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  authorizationUrl:
+                    type: string
+                    format: uri
+                  state:
+                    type: string
+        '400':
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /clio/callback:
+    post:
+      tags: [clio, authentication]
+      summary: Handle Clio OAuth callback
+      operationId: handleClioCallback
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ClioCallbackRequest'
+      responses:
+        '200':
+          description: Authentication successful
+          headers:
+            Set-Cookie:
+              schema:
+                type: string
+                example: refresh_token=xxx; HttpOnly; Secure; SameSite=Strict; Path=/; Max-Age=2592000
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TokenResponse'
+        '400':
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Authentication failed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /2fa/setup:
+    post:
+      tags: [security]
+      summary: Set up two-factor authentication
+      operationId: setupTwoFactor
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: 2FA setup information
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TOTPSetupResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /2fa/verify:
+    post:
+      tags: [security]
+      summary: Verify two-factor authentication
+      operationId: verifyTwoFactor
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TOTPVerifyRequest'
+      responses:
+        '200':
+          description: 2FA verification successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+        '400':
+          description: Invalid code
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /me:
+    get:
+      tags: [account]
+      summary: Get current user profile
+      operationId: getCurrentUser
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: User profile
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserProfile'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /logout:
+    post:
+      tags: [authentication]
+      summary: Logout user and invalidate tokens
+      operationId: logout
+      security:
+        - BearerAuth: []
+        - RefreshToken: []
+      responses:
+        '200':
+          description: Logout successful
+          headers:
+            Set-Cookie:
+              schema:
+                type: string
+                example: refresh_token=; HttpOnly; Secure; SameSite=Strict; Path=/; Max-Age=0
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /.well-known/jwks.json:
+    get:
+      tags: [tokens]
+      summary: JSON Web Key Set
+      operationId: getJwks
+      responses:
+        '200':
+          description: JWKS containing public keys
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  keys:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        kid:
+                          type: string
+                        kty:
+                          type: string
+                        alg:
+                          type: string
+                        use:
+                          type: string
+                        n:
+                          type: string
+                        e:
+                          type: string 
