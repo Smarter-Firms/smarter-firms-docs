@@ -124,9 +124,44 @@ const addSecurityHeaders = (req, res, next) => {
       res.setHeader('Surrogate-Control', 'no-store');
     }
     
+    // Add backup headers in case Helmet middleware fails
+    res.setHeader('X-Content-Type-Options', 'nosniff');
+    res.setHeader('X-XSS-Protection', '1; mode=block');
+    res.setHeader('X-Frame-Options', 'DENY');
+    
     next();
   });
 };
+```
+
+### Metrics Tracking for Security Headers
+
+The API Gateway now implements comprehensive metrics tracking for security headers to monitor their effectiveness:
+
+```javascript
+const trackSecurityHeaderMetrics = (req, res, next) => {
+  const end = res.end;
+  
+  res.end = function() {
+    // Track which security headers were successfully applied
+    const appliedHeaders = Object.keys(res.getHeaders())
+      .filter(header => securityHeadersList.includes(header.toLowerCase()));
+    
+    // Record metrics for monitoring
+    metrics.increment('security.headers.applied', appliedHeaders.length);
+    appliedHeaders.forEach(header => {
+      metrics.increment(`security.headers.${header.toLowerCase()}`);
+    });
+    
+    return end.apply(this, arguments);
+  };
+  
+  next();
+};
+
+// Apply both middleware
+app.use(addSecurityHeaders);
+app.use(trackSecurityHeaderMetrics);
 ```
 
 ## Environment-Specific Configuration
