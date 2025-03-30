@@ -1,50 +1,59 @@
 # Smarter Firms Documentation
 
-Welcome to the central documentation repository for the Smarter Firms platform. This repository serves as the single source of truth for all stabilized documentation across our microservices architecture.
+This repository serves as the central documentation hub for the Smarter Firms platform. It contains architecture documents, implementation guides, and service-specific documentation.
 
-## Documentation Structure
+## Documentation Organization
 
-The documentation is organized by service and cross-cutting concerns:
+Documentation is organized by service and cross-cutting concerns:
 
-- **[api-contracts](./api-contracts/)** - Interface definitions between services
-- **[api-gateway](./api-gateway/)** - API Gateway documentation
-- **[architecture](./architecture/)** - System-wide architecture documentation
-- **[auth-service](./auth-service/)** - Authentication service documentation
-- **[clio-integration](./clio-integration/)** - Clio API integration documentation
-- **[data-service](./data-service/)** - Data access service documentation
-- **[operations](./operations/)** - Development workflow and operational procedures
-- **[project-management](./project-management/)** - Project roadmap, tasks, and planning
-- **[security](./security/)** - Security standards and implementation details
-- **[ui-service](./ui-service/)** - Frontend service documentation
+### Services
+
+- [Auth Service](./auth-service/): Authentication and authorization implementation
+- [API Gateway](./api-gateway/): API Gateway configuration and integration
+- [UI Service](./ui-service/): Frontend components and user experience
+- [Data Service](./data-service/): Multi-tenant data management
+- [Clio Integration Service](./clio-integration/): Clio API integration
+- [Account Billing Service](./account-billing-service/): Billing and subscription management
+- [Common Models](./common-models/): Shared data models and schemas
+
+### Cross-Cutting Concerns
+
+- [Architecture](./architecture/): System-wide architecture and design
+- [API Contracts](./api-contracts/): API specifications and contracts
+- [Operations](./operations/): Development workflow, testing, and deployment
+- [Project Management](./project-management/): Project planning and progress tracking
 
 ## Documentation Strategy
 
-This repository follows a specific documentation strategy to maintain consistency and avoid duplication across our services. For details on how documentation should be managed, please refer to the [Documentation Strategy](./DOCUMENTATION-STRATEGY.md) document.
+We follow a structured approach to documentation management:
 
-Key principles:
-- This repository is the single source of truth for stabilized documentation
-- Service repositories should reference this central repository
-- Documentation should first be drafted in service repositories before being promoted here
-- All cross-service documentation belongs here
+1. **Single Source of Truth**: This repository is the authoritative source for all stable documentation
+2. **Service References**: Each service repository contains references to this central documentation
+3. **Work-in-Progress**: Draft documentation is maintained in service repositories until ready to be migrated here
+
+For complete details on our documentation approach, see the [Documentation Strategy](./DOCUMENTATION-STRATEGY.md).
+
+## Documentation Tools
+
+This repository includes scripts to help maintain documentation:
+
+- `identify-and-clean-duplicates.sh`: Identifies duplicate documentation across repositories
+- `clean-all-duplicates.sh`: Removes duplicates and creates references to the central repository
+- `complete-docs-reorganization.sh`: Performs a comprehensive reorganization of documentation
 
 ## Contributing
 
-If you want to contribute to this documentation repository, please follow these steps:
+When contributing to this documentation:
 
-1. Review the [Documentation Strategy](./DOCUMENTATION-STRATEGY.md)
-2. Create a branch for your changes
-3. Make your updates
-4. Submit a pull request
-5. Update references in service repositories if needed
+1. Follow the documentation workflow described in the [Documentation Strategy](./DOCUMENTATION-STRATEGY.md)
+2. Ensure your documentation is accurate, clear, and follows our formatting standards
+3. Include diagrams, code examples, and links to related documentation where appropriate
+4. Submit a PR for review before merging changes
 
-For more details, see the [Contributing Guide](./CONTRIBUTING.md).
+## Getting Help
 
-## Getting Started
+If you have questions about documentation or can't find what you need:
 
-New team members should start with the following documentation:
-
-1. [System Architecture](./architecture/System-Architecture.md)
-2. [Technical Standards](./architecture/Technical-Standards.md)
-3. [Development Workflow](./operations/Development-Workflow.md)
-4. [Project Overview](./project-management/Project-Overview.md)
-5. Service-specific documentation for your assigned service
+1. Check the [Documentation Strategy](./DOCUMENTATION-STRATEGY.md) for guidance on where specific types of documentation should live
+2. Look at the service-specific README.md files for navigation to relevant docs
+3. Reach out to the team for help with finding or creating documentation

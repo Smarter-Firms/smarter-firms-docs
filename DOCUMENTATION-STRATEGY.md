@@ -1,96 +1,119 @@
 # Smarter Firms Documentation Strategy
 
-This document outlines our approach to documentation across the Smarter Firms platform to maintain consistency, avoid duplication, and ensure all team members can find the information they need.
+## Core Principles
 
-## Documentation Structure
-
-Our documentation is organized into a clear hierarchy:
-
-### 1. Central Documentation Repository (`smarter-firms-docs`)
-
-This is the single source of truth for all finalized documentation. It contains:
-
-- System-wide architecture documentation
-- Cross-service integration patterns
-- Shared technical standards and guidelines
-- Service-specific documentation in dedicated folders
-
-### 2. Service Repositories
-
-Service repositories should contain:
-
-- README.md with basic setup instructions
-- In-progress documentation (drafts)
-- Code-specific documentation (API endpoints, etc.)
-- Implementation notes that are likely to change frequently
+1. **Single Source of Truth** - All stable documentation lives in the central documentation repository (`smarter-firms-docs`).
+2. **Clear References** - Service repositories reference documentation in the central repository.
+3. **Draft in Service Repos** - Work-in-progress documentation can be maintained in service repositories until stabilized.
+4. **Consistent Structure** - Documentation is organized consistently across all repositories.
+5. **Automation** - Scripts automate common documentation tasks (like finding duplicates).
 
 ## Documentation Workflow
 
-1. **Initial Documentation Creation**:
-   - New documentation should be drafted in the service repository
-   - Use a `docs/` folder at the root of the service repository
+### 1. Draft Phase
+- Create initial documentation in your service's `docs/` directory
+- Use Markdown format with proper headings and structure
+- Include code examples and diagrams as needed
 
-2. **Review and Stabilization**:
-   - Documentation is reviewed as part of the PR process
-   - Once the documented feature is stabilized, the documentation should be considered for promotion
+### 2. Review Phase
+- Include documentation review as part of PR reviews
+- Refine documentation based on feedback
+- Keep documentation in your service repo until stabilized
 
-3. **Promotion to Central Repository**:
-   - Documentation that is valuable across teams should be moved to the central repository
-   - Create a PR against the `smarter-firms-docs` repository
-   - Remove duplicated content from the service repository and add a reference to the central docs
+### 3. Stabilization Phase
+- When a feature is complete and documentation is stabilized:
+  - Create a PR to move it to the central docs repository
+  - Place it in the appropriate folder (e.g., `/auth-service/`, `/api-gateway/`)
+  - Update your service's `docs/README.md` to reference the central docs
 
-4. **Maintenance**:
-   - Updates to existing documentation should be made in the central repository
-   - When significant changes are made to a service that affects its documentation, update both the service repo docs and central docs accordingly
+### 4. Maintenance Phase
+- All future updates should be made to the central docs
+- Reference central docs from service READMEs and code
 
-## Documentation Categories
+## File Structure
 
-| Type | Location | Examples |
-|------|----------|----------|
-| Architecture | Central Repo | System diagrams, service boundaries |
-| API Contracts | Central Repo | Interface definitions, OpenAPI specs |
-| Implementation Guides | Central Repo | Security implementation, multi-tenant patterns |
-| Setup Instructions | Service Repo | Environment setup, local development |
-| Code-level Documentation | Service Repo | Function documentation, class structure |
-| Work-in-progress | Service Repo | Feature documentation during development |
+### Central Documentation Repository
+- `architecture/` - System-wide architecture documents
+- `operations/` - DevOps, workflows, and processes
+- `api-contracts/` - API specifications and contracts
+- `<service-name>/` - Service-specific documentation
+- `DOCUMENTATION-STRATEGY.md` - This file
+- `README.md` - Repository overview and navigation
+- Helper scripts for documentation management
 
-## Avoiding Duplication
+### Service Repositories
+- `docs/README.md` - References to central documentation
+- `docs/<file>.md` - Work-in-progress documentation only
 
-1. **Use References**: Instead of duplicating content, reference the canonical documentation
-2. **Clear Ownership**: Each document should have a clear owner responsible for updates
-3. **Regular Cleanup**: Periodically audit documentation to remove outdated or duplicated content
+## Documentation Standards
 
-## Documentation Format
+1. **Format** - Use Markdown for all documentation
+2. **Diagrams** - Use Mermaid or PlantUML for diagrams
+3. **Code Examples** - Include fully functional, tested code examples
+4. **Links** - Use relative links within the repository, GitHub URLs for cross-repository links
+5. **Headers** - Use consistent header levels and naming
+6. **Tables of Contents** - Include for documents longer than 2 screens
 
-1. All documentation should be written in Markdown
-2. Use diagrams (Mermaid, PlantUML) for visual explanations
-3. Include code examples where appropriate
-4. Follow a consistent structure with clear headings
+## Service-Specific Documentation Guidelines
 
-## Documentation Review
+### Auth Service
+- Authentication flows with diagrams
+- Security implementation details
+- API authentication documentation
+- Integration guides for other services
 
-All documentation PRs should be reviewed for:
+### API Gateway
+- Service integration guides
+- Security measures and configurations
+- Rate limiting and caching strategies
+- Deployment procedures
 
-1. Technical accuracy
-2. Clarity and comprehensiveness
-3. Proper placement in the documentation hierarchy
-4. Avoidance of duplication
+### UI Service
+- Component documentation with examples
+- Authentication UI flows
+- Firm context management
+- Responsive design guidelines
 
-## Special Considerations
+### Data Service
+- Multi-tenant implementation details
+- Repository pattern implementation
+- Row-level security guidelines
+- Query optimization guidelines
+- Caching strategies
 
-### API Documentation
+### Clio Integration Service
+- Clio API documentation
+- Webhook handling procedures
+- OAuth implementation details
+- Data synchronization strategies
 
-- OpenAPI/Swagger specifications should be maintained in the service repositories
-- The compiled API documentation should be published to the central repository
+### Account Billing Service
+- Billing models documentation
+- Payment processing details
+- Subscription management
+- Integration with Auth Service
 
-### Architecture Decision Records (ADRs)
+### Common Models
+- Model definitions and schema documentation
+- Versioning guidelines
+- Type system documentation
+- Migration guides
 
-- ADRs should always be stored in the central repository
-- ADRs should never be modified once approved (only new ADRs should be added)
+## Documentation Tools
 
-## Recommendation for Current State
+The central documentation repository includes scripts to help maintain documentation:
 
-1. Audit all service repositories for valuable documentation
-2. Move stable, cross-team documentation to the central repository
-3. Remove duplicated content from service repositories
-4. Update READMEs to point to the central documentation 
+- `identify-and-clean-duplicates.sh` - Find duplicate docs
+- `clean-all-duplicates.sh` - Remove duplicates and add reference READMEs
+- `complete-docs-reorganization.sh` - Comprehensive documentation reorganization
+
+## Best Practices
+
+1. **Update Documentation with Code Changes** - When code changes, update docs
+2. **Cross-Reference** - Link related documentation
+3. **Use Templates** - Follow standard templates for common doc types
+4. **Versioning** - Indicate compatibility with software versions
+5. **Keep History** - Maintain a changelog for significant doc changes
+6. **Review Process** - Include documentation in code reviews
+7. **Validate Links** - Ensure all links are valid
+8. **Accessibility** - Ensure documentation is accessible to all users 

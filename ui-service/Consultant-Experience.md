@@ -1,284 +1,184 @@
-# Consultant Experience
+# Consultant Experience UI
 
-This document outlines the design and technical specifications for the consultant experience within the Smarter Firms platform.
+This document details the UI components and flows specifically designed for consultants working with multiple client firms.
 
 ## Overview
 
-Consultant accounts allow third-party advisors to access and analyze multiple law firms' data through the Smarter Firms platform. These accounts have special requirements and interfaces to manage multiple firm relationships.
+The consultant experience enables users to:
 
-## User Journey
+- View and switch between multiple client firms
+- See clear visual indicators of the current firm context
+- Access cross-firm data without changing context
+- Receive warnings for unsaved changes during context switching
+- View detailed loading states during operations
 
-### Registration & Onboarding
+## Components
 
-1. **Registration**:
-   - Consultant selects "Consultant Registration" from login page
-   - Completes form with personal/organization details
-   - Verifies email
-   - Sets up required 2FA
-   - Creates profile including organization, specialty, bio
+### FirmSelector
 
-2. **Firm Association**:
-   - Can be invited by a firm (receive email invitation)
-   - Can enter referral code during registration
-   - Can request access to a firm (requires firm approval)
+A dropdown component that allows consultants to switch between their associated firms:
 
-3. **Orientation**:
-   - Receives tutorial on navigating between firms
-   - Introduced to consultant-specific features
-   - Completes profile visible to associated firms
+![FirmSelector component](./assets/firm-selector.png)
 
-## Interface Design
-
-### 1. Firm Selector Dashboard
-
-```
-┌──────────────────────────────────────────────────────────────────────┐
-│ SMARTER FIRMS                                         [User Menu ▼]  │
-├──────────────────────────────────────────────────────────────────────┤
-│                                                                      │
-│  CONSULTANT DASHBOARD                                                │
-│                                                                      │
-│  ┌────────────────┐  ┌────────────────┐  ┌────────────────┐         │
-│  │ RECENT FIRMS   │  │ FIRM DIRECTORY │  │ METRICS        │         │
-│  │                │  │                │  │                │         │
-│  │ * Smith Law    │  │ SEARCH:  [   ] │  │ Total Firms: 12│         │
-│  │ * Johnson LLC  │  │                │  │ Active: 10     │         │
-│  │ * Davis Group  │  │ • Abbott Law   │  │ New This Month:│         │
-│  │                │  │ • Baker & Co   │  │ 2              │         │
-│  │ VIEW ALL       │  │ • Carter Legal │  │                │         │
-│  └────────────────┘  └────────────────┘  └────────────────┘         │
-│                                                                      │
-│  ┌─────────────────────────────────────────────────────────────────┐ │
-│  │ FIRM ACTIVITY FEED                                              │ │
-│  │                                                                 │ │
-│  │ • Smith Law - New matter created (23 min ago)                   │ │
-│  │ • Johnson LLC - Monthly report ready (2 hours ago)              │ │
-│  │ • Davis Group - Revenue goal achieved (1 day ago)               │ │
-│  │                                                                 │ │
-│  │                                       VIEW ALL NOTIFICATIONS    │ │
-│  └─────────────────────────────────────────────────────────────────┘ │
-│                                                                      │
-└──────────────────────────────────────────────────────────────────────┘
+```tsx
+<FirmSelector
+  firms={firms}
+  currentFirmId={currentFirm?.id || null}
+  loadingState={loadingState}
+  onFirmSelect={switchFirm}
+  hasUnsavedChanges={hasUnsavedChanges}
+  activeFirmOperations={activeFirmOperations}
+/>
 ```
 
-### 2. Firm View Switcher
+#### Features
 
-```
-┌──────────────────────────────────────────────────────────────────────┐
-│ SMARTER FIRMS                                         [User Menu ▼]  │
-├──────────────────────────────────────────────────────────────────────┤
-│                                                                      │
-│  VIEWING: SMITH LAW FIRM                   [CHANGE FIRM ▼]           │
-│                                                                      │
-│  [Overview] [Performance] [Clients] [Matters] [Financial] [Reports]  │
-│                                                                      │
-│  ┌────────────────────────────────────────────────────────────────┐  │
-│  │                                                                │  │
-│  │               [FIRM-SPECIFIC DASHBOARD CONTENT]                │  │
-│  │                                                                │  │
-│  └────────────────────────────────────────────────────────────────┘  │
-│                                                                      │
-│               [CONSULTANT'S NOTES ABOUT THIS FIRM]                   │
-│  ┌────────────────────────────────────────────────────────────────┐  │
-│  │ Private notes visible only to consultant                        │  │
-│  │ Last review date: March 15, 2023                               │  │
-│  │                                                                │  │
-│  │ Goals:                                                         │  │
-│  │ - Increase matter efficiency                                   │  │
-│  │ - Improve client intake process                                │  │
-│  │                                                                │  │
-│  └────────────────────────────────────────────────────────────────┘  │
-└──────────────────────────────────────────────────────────────────────┘
+- Sorted list of firms by last accessed time
+- Color-coded access level badges (Full, Limited, Read-Only)
+- Unsaved changes indicator
+- Confirmation dialog when switching with unsaved changes
+- Operation-in-progress indicators
+- Prevents switching during active operations
+
+### FirmContextBanner
+
+A persistent banner that ensures consultants always know which firm context they're working in:
+
+![FirmContextBanner component](./assets/firm-context-banner.png)
+
+```tsx
+<FirmContextBanner firm={currentFirm} className="sticky top-0 z-20" />
 ```
 
-### 3. Multi-Firm Analytics View
+#### Features
 
-```
-┌──────────────────────────────────────────────────────────────────────┐
-│ SMARTER FIRMS                                         [User Menu ▼]  │
-├──────────────────────────────────────────────────────────────────────┤
-│                                                                      │
-│  MULTI-FIRM ANALYTICS                           [Export] [Share]     │
-│                                                                      │
-│  ┌─────────────────────────┐  ┌─────────────────────────┐           │
-│  │ PERFORMANCE COMPARISON  │  │ REVENUE BENCHMARKING    │           │
-│  │                         │  │                         │           │
-│  │ [Bar chart comparing    │  │ [Line chart showing     │           │
-│  │  key metrics across     │  │  revenue trends across  │           │
-│  │  selected firms]        │  │  all firms over time]   │           │
-│  │                         │  │                         │           │
-│  └─────────────────────────┘  └─────────────────────────┘           │
-│                                                                      │
-│  FIRM SELECTION                                                      │
-│  ┌────────────────────────────────────────────────────────────────┐  │
-│  │ ☑ Smith Law   ☑ Johnson LLC   ☑ Davis Group                    │  │
-│  │ ☐ Abbott Law  ☐ Baker & Co    ☐ Carter Legal                   │  │
-│  │                                                                │  │
-│  │                              [APPLY FILTERS] [SAVE SELECTION]  │  │
-│  └────────────────────────────────────────────────────────────────┘  │
-│                                                                      │
-│  ┌────────────────────────────────────────────────────────────────┐  │
-│  │ KEY INSIGHTS                                                   │  │
-│  │                                                                │  │
-│  │ • Smith Law has 25% higher revenue per attorney                │  │
-│  │ • Davis Group's matter efficiency is 15% below average         │  │
-│  │ • Johnson LLC shows consistent month-over-month growth         │  │
-│  │                                                                │  │
-│  └────────────────────────────────────────────────────────────────┘  │
-└──────────────────────────────────────────────────────────────────────┘
+- Color-coded by access level
+- Sticky positioning ensures visibility
+- Clear display of firm name and access level
+- Special indicators for read-only access
+
+### CrossFirmData
+
+Component for fetching and displaying data from different firms without switching context:
+
+```tsx
+<CrossFirmData
+  firmId="firm-123"
+  endpoint="/api/reports/summary"
+  renderData={(data) => (
+    <ReportSummary data={data} />
+  )}
+  loadingLabel="Loading client report..."
+/>
 ```
 
-### 4. Firm Management Interface
+#### Features
 
-```
-┌──────────────────────────────────────────────────────────────────────┐
-│ SMARTER FIRMS                                         [User Menu ▼]  │
-├──────────────────────────────────────────────────────────────────────┤
-│                                                                      │
-│  MANAGE FIRM RELATIONSHIPS                    [+ ADD NEW FIRM]       │
-│                                                                      │
-│  ┌────────────────────────────────────────────────────────────────┐  │
-│  │ FIRM                ACCESS LEVEL         STATUS      ACTIONS   │  │
-│  ├────────────────────────────────────────────────────────────────┤  │
-│  │ Smith Law          Full Access          Active      [⚙ Edit]   │  │
-│  │ Johnson LLC        Limited Access       Active      [⚙ Edit]   │  │
-│  │ Davis Group        Read Only            Active      [⚙ Edit]   │  │
-│  │ Abbott Law         Full Access          Pending     [Cancel]   │  │
-│  │                                                                │  │
-│  └────────────────────────────────────────────────────────────────┘  │
-│                                                                      │
-│  ┌────────────────────────────────────────────────────────────────┐  │
-│  │ FIRM INVITATIONS                                               │  │
-│  │                                                                │  │
-│  │ You have sent 2 pending invitations:                           │  │
-│  │ • Baker & Co (sent 2 days ago)                    [RESEND]     │  │
-│  │ • Carter Legal (sent 1 week ago)                  [RESEND]     │  │
-│  │                                                                │  │
-│  └────────────────────────────────────────────────────────────────┘  │
-│                                                                      │
-│  ┌────────────────────────────────────────────────────────────────┐  │
-│  │ REFERRAL CODES                                                 │  │
-│  │                                                                │  │
-│  │ Your personal referral code: HTM2023                           │  │
-│  │ Firms using this code: 5                                       │  │
-│  │                                                                │  │
-│  │ [GENERATE NEW CODE] [COPY CODE] [VIEW USAGE STATS]             │  │
-│  └────────────────────────────────────────────────────────────────┘  │
-└──────────────────────────────────────────────────────────────────────┘
+- Clear loading states with progress indication
+- Visual badge indicating data is from a different firm
+- Error handling with actionable messages
+- Custom render props for maximum flexibility
+
+### ConsultantLayout
+
+Layout wrapper that provides the complete consultant experience:
+
+```tsx
+<ConsultantLayout
+  hasUnsavedChanges={formIsDirty}
+  preventNavigation={true}
+>
+  <YourPageContent />
+</ConsultantLayout>
 ```
 
-## Technical Specifications
+#### Features
 
-### 1. Data Model Extensions
+- Firm context banner
+- Firm selector dropdown
+- Security status indicator
+- Active operations counter
+- Warning banners for no firms or security issues
+- Navigation prevention when changes are unsaved
 
+## Using the useFirmContext Hook
+
+The core of the consultant experience is powered by the `useFirmContext` hook:
+
+```tsx
+const {
+  firms,                 // Array of available firms
+  currentFirm,           // Currently selected firm
+  loadingState,          // Detailed loading state object
+  error,                 // Error message if any
+  switchFirm,            // Function to switch to a different firm
+  refreshFirms,          // Function to refresh the firm list
+  fetchCrossFirmData,    // Function to get data from another firm
+  hasPendingChanges,     // Flag for unsaved changes
+  setHasPendingChanges,  // Function to update unsaved changes state
+  activeFirmOperations   // Array of ongoing operations
+} = useFirmContext();
 ```
-User {
-  id: UUID
-  email: String
-  name: String
-  type: Enum [LAW_FIRM_USER, CONSULTANT]
-  organization: String (optional)
-  bio: String (optional)
-  authMethod: Enum [CLIO_SSO, LOCAL]
-  hasClioConnection: Boolean
-  consultantProfile: ConsultantProfile (if type = CONSULTANT)
-}
 
-ConsultantProfile {
-  id: UUID
-  userId: UUID (foreign key)
-  specialty: String
-  referralCode: String
-  profileImage: String (URL)
-  publicProfile: Boolean
-}
+### Loading States
 
-FirmConsultantAssociation {
-  id: UUID
-  firmId: UUID (foreign key)
-  consultantId: UUID (foreign key)
-  accessLevel: Enum [FULL_ACCESS, LIMITED_ACCESS, READ_ONLY]
-  status: Enum [ACTIVE, PENDING, REVOKED]
-  createdAt: DateTime
-  invitedBy: UUID (foreign key to User)
-  referralCode: String (optional)
-  lastAccessed: DateTime
-  notes: String (private notes visible only to consultant)
-}
+The `loadingState` object provides detailed information about current loading status:
 
-ConsultantPermission {
-  id: UUID
-  associationId: UUID (foreign key to FirmConsultantAssociation)
-  resource: String (e.g., "matters", "clients", "financial")
-  action: String (e.g., "view", "export")
-  allowed: Boolean
+```tsx
+interface LoadingState {
+  type: LoadingStateType; // IDLE, INITIAL, SWITCHING, REFRESHING, CROSS_FIRM_DATA, ERROR
+  message?: string;       // User-friendly loading message
+  targetFirmId?: string;  // ID of firm being loaded (for switching/cross-firm)
+  progress?: number;      // Optional progress value (0-100)
+  startTime?: Date;       // When the operation started
 }
 ```
 
-### 2. API Endpoints
+### Cross-Firm Data Access
 
-**Consultant Management**
-```
-POST   /api/consultants                // Register as consultant
-GET    /api/consultants/profile        // Get consultant profile
-PUT    /api/consultants/profile        // Update consultant profile
-GET    /api/consultants/firms          // List associated firms
-POST   /api/consultants/referral-codes // Generate new referral code
-GET    /api/consultants/referral-codes // Get referral code stats
-```
+To fetch data from another firm without switching context:
 
-**Firm Relationships**
-```
-POST   /api/consultant-firms           // Create association (send invitation)
-GET    /api/consultant-firms/:firmId   // Get specific firm association
-PUT    /api/consultant-firms/:firmId   // Update firm relationship
-DELETE /api/consultant-firms/:firmId   // Remove firm association
-GET    /api/consultant-firms/:firmId/permissions // Get permissions
-PUT    /api/consultant-firms/:firmId/permissions // Update permissions
+```tsx
+// Example: Get report data from a different firm
+const reportData = await fetchCrossFirmData(
+  otherFirmId,
+  '/api/reports/summary',
+  { params: { period: 'monthly' } }
+);
 ```
 
-**Multi-Firm Analytics**
+This will:
+1. Show a loading indicator
+2. Add the special `X-Temporary-Firm` header
+3. Track the operation in `activeFirmOperations`
+4. Return the data without changing the current firm context
+
+## Handling Unsaved Changes
+
+To prevent data loss, set the `hasPendingChanges` flag when users have unsaved work:
+
+```tsx
+// When a form is modified
+const handleFormChange = () => {
+  setHasPendingChanges(true);
+};
+
+// When changes are saved
+const handleFormSubmit = async () => {
+  await saveData();
+  setHasPendingChanges(false);
+};
 ```
-GET    /api/analytics/multi-firm       // Get analytics across firms
-POST   /api/analytics/multi-firm/export // Export multi-firm report
-GET    /api/analytics/benchmarks       // Get benchmark data
-```
 
-### 3. Security Considerations
+With this flag set:
+1. The UI will show an "Unsaved" indicator
+2. Attempts to switch firms will trigger a confirmation dialog
+3. Page navigation can be blocked (with the `preventNavigation` prop)
 
-1. **Data Isolation**:
-   - Each firm's data must be strictly isolated
-   - Consultant access should be clearly logged and auditable
-   - Firms should be able to revoke consultant access at any time
+## Best Practices
 
-2. **Permission Granularity**:
-   - Granular permissions for consultants (view, export, etc.)
-   - Ability to limit access to specific data categories
-   - Time-limited access options
-
-3. **Transparency**:
-   - Firms should be notified when consultants access their data
-   - Detailed access logs available to firm administrators
-   - Clear opt-in process for sharing data with consultants
-
-### 4. Implementation Requirements
-
-1. **Auth Service**:
-   - Add consultant-specific authentication flow
-   - Implement firm relationship management
-   - Create permission verification middleware
-
-2. **Data Service**:
-   - Implement multi-firm query capabilities
-   - Create data aggregation endpoints
-   - Build benchmarking functionality
-
-3. **UI Service**:
-   - Create consultant-specific components
-   - Implement firm selector and switcher
-   - Build multi-firm analytics visualizations
-
-4. **API Gateway**:
-   - Extend routing for consultant-specific endpoints
-   - Implement additional rate limiting for consultant accounts
-   - Add consultant-specific authentication middleware 
+1. **Always use the ConsultantLayout** for consultant-facing pages
+2. **Be explicit about unsaved changes** to prevent data loss
+3. **Utilize CrossFirmData** when displaying data from multiple firms
+4. **Handle loading states** for improved user experience
+5. **Respect access levels** when designing UI interactions 
