@@ -394,6 +394,16 @@ rm -f "$base_dir/Clio-Integration-Service/PR-Template.md" 2>/dev/null
 
 # Remove files from Data Service
 rm -f "$base_dir/Data-Service/Consultant-Experience.md" 2>/dev/null
+rm -f "$base_dir/Data-Service/docs/cache-invalidation.md" 2>/dev/null
+rm -f "$base_dir/Data-Service/docs/database-migration-plan.md" 2>/dev/null
+rm -f "$base_dir/Data-Service/docs/index.md" 2>/dev/null
+rm -f "$base_dir/Data-Service/docs/key-rotation.md" 2>/dev/null
+rm -f "$base_dir/Data-Service/docs/multi-tenant-implementation-guide.md" 2>/dev/null
+rm -f "$base_dir/Data-Service/docs/query-optimization.md" 2>/dev/null
+rm -f "$base_dir/Data-Service/docs/repository-pattern.md" 2>/dev/null
+rm -f "$base_dir/Data-Service/docs/resilience-testing.md" 2>/dev/null
+rm -f "$base_dir/Data-Service/docs/row-level-security.md" 2>/dev/null
+rm -f "$base_dir/Data-Service/docs/security-implementation.md" 2>/dev/null
 
 # Remove files from Account Billing Service
 rm -f "$base_dir/Account-Billing-Service/Technical-Standards.md" 2>/dev/null
