@@ -10,8 +10,10 @@ The documentation is organized by service and cross-cutting concerns:
 - **[api-gateway](./api-gateway/)** - API Gateway documentation
 - **[architecture](./architecture/)** - System-wide architecture documentation
 - **[auth-service](./auth-service/)** - Authentication service documentation
+- **[clio-integration](./clio-integration/)** - Clio API integration documentation
 - **[data-service](./data-service/)** - Data access service documentation
 - **[operations](./operations/)** - Development workflow and operational procedures
+- **[project-management](./project-management/)** - Project roadmap, tasks, and planning
 - **[security](./security/)** - Security standards and implementation details
 - **[ui-service](./ui-service/)** - Frontend service documentation
 
@@ -44,4 +46,5 @@ New team members should start with the following documentation:
 1. [System Architecture](./architecture/System-Architecture.md)
 2. [Technical Standards](./architecture/Technical-Standards.md)
 3. [Development Workflow](./operations/Development-Workflow.md)
-4. Service-specific documentation for your assigned service
+4. [Project Overview](./project-management/Project-Overview.md)
+5. Service-specific documentation for your assigned service
