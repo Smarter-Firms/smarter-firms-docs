@@ -64,17 +64,17 @@ Implement a service discovery mechanism to allow services to locate and communic
 
 ## Detailed Tasks & Timeline
 
-| Task | Description | Owner | Due Date |
+| Task | Description | Owner | Sequence |
 |------|-------------|-------|----------|
-| **VPC & Network Setup** | Configure core networking infrastructure | Network Engineer | July 6, 2023 |
-| **Database Provisioning** | Set up shared and service-specific databases | Database Engineer | July 7, 2023 |
-| **Container Registry** | Configure ECR repositories for all services | DevOps Engineer | July 8, 2023 |
-| **Deployment Pipelines** | Create standardized CI/CD pipelines | DevOps Lead | July 10, 2023 |
-| **Service Discovery** | Implement service discovery framework | Systems Architect | July 12, 2023 |
-| **Monitoring Setup** | Configure logging and monitoring | SRE Engineer | July 13, 2023 |
-| **Access Management** | Configure IAM roles and access patterns | Security Engineer | July 14, 2023 |
-| **Documentation** | Create comprehensive environment documentation | Tech Writer | July 15, 2023 |
-| **Team Onboarding** | Assist teams with pipeline integration | DevOps Team | July 15-22, 2023 |
+| **VPC & Network Setup** | Configure core networking infrastructure | Network Engineer | Step 1 (Phase 2, Day 1) |
+| **Database Provisioning** | Set up shared and service-specific databases | Database Engineer | Step 2 (Phase 2, Day 2) |
+| **Container Registry** | Configure ECR repositories for all services | DevOps Engineer | Step 3 (Phase 2, Day 3) |
+| **Deployment Pipelines** | Create standardized CI/CD pipelines | DevOps Lead | Step 4 (Phase 2, Day 5) |
+| **Service Discovery** | Implement service discovery framework | Systems Architect | Step 5 (Phase 2, Day 7) |
+| **Monitoring Setup** | Configure logging and monitoring | SRE Engineer | Step 6 (Phase 2, Day 8) |
+| **Access Management** | Configure IAM roles and access patterns | Security Engineer | Step 7 (Phase 2, Day 9) |
+| **Documentation** | Create comprehensive environment documentation | Tech Writer | Step 8 (Phase 2, Day 10) |
+| **Team Onboarding** | Assist teams with pipeline integration | DevOps Team | Ongoing (Phase 3) |
 
 ## Implementation Guidelines
 
@@ -171,9 +171,9 @@ Use infrastructure as code (Terraform preferred) and document all decisions. Fol
 ## Communication Plan
 
 - Daily standups to report progress
-- Technical review at the midpoint (July 10)
-- Office hours for service teams starting July 15
-- Final environment review on July 22
+- Technical review at the midpoint (Phase 2, Day 5)
+- Office hours for service teams starting in Phase 3
+- Final environment review at the end of Phase 3
 
 ## Dependencies
 

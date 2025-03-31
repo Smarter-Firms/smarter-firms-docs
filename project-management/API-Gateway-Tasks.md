@@ -66,17 +66,17 @@ Work with the Infrastructure team to implement service discovery:
 
 ## Detailed Tasks & Timeline
 
-| Task | Description | Owner | Due Date |
+| Task | Description | Owner | Sequence |
 |------|-------------|-------|----------|
-| **API Standards Documentation** | Create comprehensive API standards | API Architect | July 8, 2023 |
-| **Auth Flow Implementation** | Configure standardized authentication | Security Engineer | July 10, 2023 |
-| **OpenAPI Template** | Create standardized OpenAPI template | API Engineer | July 12, 2023 |
-| **Gateway Configuration** | Configure API Gateway routing | DevOps Engineer | July 13, 2023 |
-| **Service Discovery Integration** | Implement service discovery | Systems Engineer | July 15, 2023 |
-| **Validation Tools** | Create API validation tools | API Engineer | July 17, 2023 |
-| **Reference Implementation** | Build reference service implementation | Full Stack Developer | July 19, 2023 |
-| **Documentation** | Finalize documentation and examples | Technical Writer | July 20, 2023 |
-| **Team Support** | Provide support for service teams | API Gateway Team | July 15-22, 2023 |
+| **API Standards Documentation** | Create comprehensive API standards | API Architect | Step 1 (Phase 2, Day 3) |
+| **Auth Flow Implementation** | Configure standardized authentication | Security Engineer | Step 2 (Phase 2, Day 5) |
+| **OpenAPI Template** | Create standardized OpenAPI template | API Engineer | Step 3 (Phase 2, Day 7) |
+| **Gateway Configuration** | Configure API Gateway routing | DevOps Engineer | Step 4 (Phase 2, Day 8) |
+| **Service Discovery Integration** | Implement service discovery | Systems Engineer | Step 5 (Phase 2, Day 10) |
+| **Validation Tools** | Create API validation tools | API Engineer | Step 6 (Phase 3, Day 2) |
+| **Reference Implementation** | Build reference service implementation | Full Stack Developer | Step 7 (Phase 3, Day 4) |
+| **Documentation** | Finalize documentation and examples | Technical Writer | Step 8 (Phase 3, Day 5) |
+| **Team Support** | Provide support for service teams | API Gateway Team | Ongoing (Phase 3) |
 
 ## Implementation Guidelines
 
@@ -195,9 +195,9 @@ The standards should follow RESTful best practices, include proper error handlin
 ## Communication Plan
 
 - Weekly API working group meetings
-- Technical review at the midpoint (July 15)
-- Office hours for service teams starting July 17
-- Final review and presentation on July 22
+- Technical review at the midpoint (Phase 2, Day 5)
+- Office hours for service teams starting in Phase 3
+- Final review and presentation at the end of Phase 3
 
 ## Dependencies
 

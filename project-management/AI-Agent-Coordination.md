@@ -165,7 +165,7 @@ For major deliverables, implement an approval workflow:
 2. **Document Everything**: Save all significant outputs to the documentation repository
 3. **Clear Handoffs**: When transitioning work between agents, provide complete context
 4. **Consistent Formatting**: Use consistent document formats for better synthesis
-5. **Realistic Timing**: Simulate realistic project timelines in your prompts
+5. **Realistic Timing**: Simulate realistic project progress in your prompts
 6. **Challenge Testing**: Occasionally introduce realistic challenges to test robustness
 7. **Cross-Pollination**: Share innovative approaches between agents when relevant
 

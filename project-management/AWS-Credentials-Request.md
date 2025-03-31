@@ -8,10 +8,10 @@ This document outlines the AWS credentials required for setting up the standardi
 
 | Milestone | Required By | Purpose |
 |-----------|-------------|---------|
-| Planning Phase | July 3, 2023 | Initial access for architecture design |
-| Infrastructure Setup | July 6, 2023 | Core resource provisioning |
-| Pipeline Configuration | July 10, 2023 | CI/CD setup |
-| Service Deployment | July 15, 2023 | Initial service deployment |
+| Planning Phase | Phase 1, Day 3 | Initial access for architecture design |
+| Infrastructure Setup | Phase 2, Day 1 | Core resource provisioning |
+| Pipeline Configuration | Phase 2, Day 5 | CI/CD setup |
+| Service Deployment | Phase 2, Day 10 | Initial service deployment |
 
 ## Required AWS Credentials
 
@@ -68,7 +68,7 @@ Once the initial setup is complete, the Infrastructure team will:
 
 ## Next Steps
 
-1. Please provide the requested credentials to the Infrastructure team lead by **July 3, 2023**
+1. Please provide the requested credentials to the Infrastructure team lead by **Phase 1, Day 3**
 2. Schedule a brief meeting to discuss any specific AWS account requirements or limitations
 3. Infrastructure team will provide a detailed plan of resource provisioning for review
 4. Regular updates will be provided on resource usage and any additional requirements

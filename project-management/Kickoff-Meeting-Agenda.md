@@ -1,7 +1,6 @@
 # Standardization Kickoff Meeting Agenda
 
-**Date**: July 3, 2023  
-**Time**: 10:00 AM - 12:00 PM EST  
+**Time**: 10:00 AM - 12:00 PM  
 **Location**: Virtual Meeting (Zoom)  
 **Required Attendees**: All Team Leads and Standardization Liaisons  
 
@@ -48,7 +47,7 @@
   - Q&A
 
 ### 11:00 - 11:15 AM: Implementation Timeline
-- Review of key dates and milestones
+- Review of key phases and milestones
 - Coordination points between teams
 - Critical path dependencies
 - Progress tracking and reporting approach
